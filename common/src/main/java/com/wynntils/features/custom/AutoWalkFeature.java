@@ -27,6 +27,7 @@ public class AutoWalkFeature extends Feature {
             new KeyBind("Auto Walk Towards Mob Totem", GLFW.GLFW_KEY_F9, true, this::action);
     private final Minecraft client;
     private boolean isWalking = false;
+    private Vec3 lastPosition;
     public AutoWalkFeature() {
         this.client = Minecraft.getInstance();
     }
@@ -36,21 +37,19 @@ public class AutoWalkFeature extends Feature {
         LocalPlayer player = Minecraft.getInstance().player;
         if (player != null && isWalking) {
             if (getCenter() != null)
-                if (getCenter().distanceTo(player.position()) > 7) {
-                    pointPlayerToCoordinates(getCenter(), 10);
+                if (getCenter().distanceTo(player.position()) > 6) {
+                    pointPlayerToCoordinates(getCenter());
                     startWalking();
                 } else {
                     stopWalking();
                 }
             else {
                 stopWalking();
-                isWalking = true;
             }
         }
     }
 
     private void startWalking() {
-        isWalking = true;
         LocalPlayer player = client.player;
         if (player != null) {
             KeyMapping forwardKey = client.options.keyUp;
@@ -59,7 +58,6 @@ public class AutoWalkFeature extends Feature {
     }
 
     private void stopWalking() {
-        isWalking = false;
         KeyMapping forwardKey = client.options.keyUp;
         forwardKey.setDown(false);
     }
@@ -78,21 +76,19 @@ public class AutoWalkFeature extends Feature {
         return Math.toDegrees(Math.atan2(dy, horizontalDistance)) * -1;
     }
 
-    private void pointPlayerToCoordinates(Position targetPos, int percentage) {
+    private void pointPlayerToCoordinates(Position targetPos) {
         LocalPlayer player = client.player;
         if (player != null) {
             double yaw = calculateYaw(player.getX(), player.getY(), player.getZ(), targetPos.x(), targetPos.y(), targetPos.z());
             double pitch = calculatePitch(player.getX(), player.getY(), player.getZ(), targetPos.x(), targetPos.y(), targetPos.z());
-            double yawDiff = player.getYRot() - yaw;
-            double pitchDiff = player.getXRot() - pitch;
-            player.setYRot((float) (player.getYRot() - yawDiff * percentage));
-            player.setYRot((float) (player.getXRot() - pitchDiff * percentage));
+            player.setYRot((float) (player.getYRot() + yaw) / 2);
+            player.setXRot((float) (player.getXRot() + pitch) / 2);
         }
     }
     public Vec3 getCenter() {
         List<MobTotem> totems = Models.MobTotem.getMobTotems();
         if (totems.isEmpty()) {
-            return null;
+            return lastPosition;
         }
 
         double sumX = 0;
@@ -109,19 +105,22 @@ public class AutoWalkFeature extends Feature {
         double centerY = sumY / totems.size();
         double centerZ = sumZ / totems.size();
 
+        lastPosition = new Vec3(centerX, centerY, centerZ);
         return new Vec3(centerX, centerY, centerZ);
     }
     public void action() {
         if (!isWalking) {
             if (getCenter() != null) {
                 McUtils.sendMessageToClient(Component.literal("Enabled auto walk"));
-                pointPlayerToCoordinates(getCenter(), 100);
+                pointPlayerToCoordinates(getCenter());
+                isWalking = true;
                 startWalking();
             } else
                 McUtils.sendMessageToClient(Component.literal("No mob totems found"));
         } else {
             McUtils.sendMessageToClient(Component.literal("Disable auto walk"));
             stopWalking();
+            isWalking = false;
         }
     }
 }

@@ -382,9 +382,6 @@ public final class FeatureManager extends Manager {
         registerFeature(new ExtendedSeasonLeaderboardFeature());
         registerFeature(new MythicFoundFeature());
         registerFeature(new TerritoryDefenseMessageFeature());
-        // endregion
-
-        // region custom
         registerFeature(new AutoWalkFeature());
         registerFeature(new AutoCastFeature());
         // endregion
@@ -446,7 +443,7 @@ public final class FeatureManager extends Manager {
         Managers.Overlay.discoverOverlayGroups(feature);
 
         // Assert that the feature name is properly translated
-        assert !feature.getTranslatedName().startsWith("feature.wynntils.")
+        assert !feature.getTranslatedName().startsWith("feature.wynntils.") //TODO reenable
                 : "Fix i18n for " + feature.getTranslatedName();
 
         // Assert that the feature description is properly translated
