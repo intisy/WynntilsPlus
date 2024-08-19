@@ -108,13 +108,7 @@ import com.wynntils.features.overlays.TerritoryAttackTimerOverlayFeature;
 import com.wynntils.features.overlays.TokenBarsOverlayFeature;
 import com.wynntils.features.overlays.TowerEffectOverlayFeature;
 import com.wynntils.features.overlays.TowerStatsFeature;
-import com.wynntils.features.players.AutoJoinPartyFeature;
-import com.wynntils.features.players.CustomNametagRendererFeature;
-import com.wynntils.features.players.GearViewerFeature;
-import com.wynntils.features.players.HadesFeature;
-import com.wynntils.features.players.PartyManagementScreenFeature;
-import com.wynntils.features.players.PlayerArmorHidingFeature;
-import com.wynntils.features.players.PlayerGhostTransparencyFeature;
+import com.wynntils.features.players.*;
 import com.wynntils.features.redirects.AbilityRefreshRedirectFeature;
 import com.wynntils.features.redirects.BlacksmithRedirectFeature;
 import com.wynntils.features.redirects.ChatRedirectFeature;
@@ -379,6 +373,10 @@ public final class FeatureManager extends Manager {
         registerFeature(new TelemetryFeature());
         registerFeature(new UpdatesFeature());
         registerFeature(new WeeklyConfigBackupFeature());
+        // endregion
+
+        // region custom
+        registerFeature(new AutoWalkFeature());
         // endregion
 
         // region uncategorized
