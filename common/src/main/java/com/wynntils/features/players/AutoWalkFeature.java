@@ -22,7 +22,7 @@ import java.util.List;
 public class AutoWalkFeature extends Feature {
     @RegisterKeyBind
     private final KeyBind autoWalkKeyBind =
-            new KeyBind("Lock Slot", GLFW.GLFW_KEY_F9, true, this::action);
+            new KeyBind("Auto Walk Towards Mob Totem", GLFW.GLFW_KEY_F9, true, this::action);
     private final Minecraft client;
     private boolean isWalking = false;
     private Vec3 position;
@@ -109,8 +109,10 @@ public class AutoWalkFeature extends Feature {
     public void action() {
         if (!isWalking) {
             position = getCenter();
-            pointPlayerToCoordinates(position);
-            startWalking();
+            if (position != null) {
+                pointPlayerToCoordinates(position);
+                startWalking();
+            }
         } else {
             stopWalking();
         }
