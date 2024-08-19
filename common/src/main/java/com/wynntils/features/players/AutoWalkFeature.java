@@ -21,12 +21,10 @@ import java.util.List;
 @ConfigCategory(Category.INVENTORY)
 public class AutoWalkFeature extends Feature {
     @RegisterKeyBind
-    private final KeyBind autoWalkKeyBind =
+    public final KeyBind autoWalkKeyBind =
             new KeyBind("Auto Walk Towards Mob Totem", GLFW.GLFW_KEY_F9, true, this::action);
     private final Minecraft client;
     private boolean isWalking = false;
-    private Vec3 position;
-
     public AutoWalkFeature() {
         this.client = Minecraft.getInstance();
     }
@@ -37,12 +35,15 @@ public class AutoWalkFeature extends Feature {
         LocalPlayer player = client.player;
 
         if (player != null && isWalking) {
-            if (position.distanceTo(player.position()) > 0.5) {
-                pointPlayerToCoordinates(position);
-                startWalking();
-            } else {
+            if (getCenter() != null)
+                if (getCenter().distanceTo(player.position()) > 3) {
+                    pointPlayerToCoordinates(getCenter());
+                    startWalking();
+                } else {
+                    stopWalking();
+                }
+            else
                 stopWalking();
-            }
         }
     }
 
@@ -108,9 +109,8 @@ public class AutoWalkFeature extends Feature {
     }
     public void action() {
         if (!isWalking) {
-            position = getCenter();
-            if (position != null) {
-                pointPlayerToCoordinates(position);
+            if (getCenter() != null) {
+                pointPlayerToCoordinates(getCenter());
                 startWalking();
             }
         } else {
