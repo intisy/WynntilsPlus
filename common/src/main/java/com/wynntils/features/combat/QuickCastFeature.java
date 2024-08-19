@@ -87,7 +87,7 @@ public class QuickCastFeature extends Feature {
         }
     }
 
-    private void castFirstSpell() {
+    public void castFirstSpell() {
         tryCastSpell(SpellUnit.PRIMARY, SpellUnit.SECONDARY, SpellUnit.PRIMARY);
     }
 

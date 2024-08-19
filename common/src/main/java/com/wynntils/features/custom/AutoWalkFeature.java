@@ -1,4 +1,4 @@
-package com.wynntils.features.players;
+package com.wynntils.features.custom;
 
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
@@ -8,6 +8,7 @@ import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.mc.event.TickEvent;
 import com.wynntils.models.mobtotem.MobTotem;
+import com.wynntils.utils.mc.McUtils;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
@@ -31,19 +32,19 @@ public class AutoWalkFeature extends Feature {
 
     @SubscribeEvent
     public void onTick(TickEvent event) {
-        Minecraft client = Minecraft.getInstance();
-        LocalPlayer player = client.player;
-
+        LocalPlayer player = Minecraft.getInstance().player;
         if (player != null && isWalking) {
             if (getCenter() != null)
-                if (getCenter().distanceTo(player.position()) > 3) {
-                    pointPlayerToCoordinates(getCenter());
+                if (getCenter().distanceTo(player.position()) > 7) {
+                    pointPlayerToCoordinates(getCenter(), 10);
                     startWalking();
                 } else {
                     stopWalking();
                 }
-            else
+            else {
                 stopWalking();
+                isWalking = true;
+            }
         }
     }
 
@@ -76,13 +77,15 @@ public class AutoWalkFeature extends Feature {
         return Math.toDegrees(Math.atan2(dy, horizontalDistance)) * -1;
     }
 
-    private void pointPlayerToCoordinates(Position targetPos) {
+    private void pointPlayerToCoordinates(Position targetPos, int percentage) {
         LocalPlayer player = client.player;
         if (player != null) {
             double yaw = calculateYaw(player.getX(), player.getY(), player.getZ(), targetPos.x(), targetPos.y(), targetPos.z());
             double pitch = calculatePitch(player.getX(), player.getY(), player.getZ(), targetPos.x(), targetPos.y(), targetPos.z());
-            player.setYRot((float) yaw);
-            player.setXRot((float) pitch);
+            double yawDiff = player.getYRot() - yaw;
+            double pitchDiff = player.getXRot() - pitch;
+            player.setYRot((float) (player.getYRot() - yawDiff * percentage));
+            player.setYRot((float) (player.getXRot() - pitchDiff * percentage));
         }
     }
     public Vec3 getCenter() {
@@ -110,10 +113,13 @@ public class AutoWalkFeature extends Feature {
     public void action() {
         if (!isWalking) {
             if (getCenter() != null) {
-                pointPlayerToCoordinates(getCenter());
+                McUtils.sendChat("Enabled auto walk");
+                pointPlayerToCoordinates(getCenter(), 100);
                 startWalking();
-            }
+            } else
+                McUtils.sendChat("No mob totems found");
         } else {
+            McUtils.sendChat("Disable auto walk");
             stopWalking();
         }
     }

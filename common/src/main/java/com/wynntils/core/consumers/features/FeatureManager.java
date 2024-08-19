@@ -48,6 +48,8 @@ import com.wynntils.features.commands.AddCommandExpansionFeature;
 import com.wynntils.features.commands.CommandAliasesFeature;
 import com.wynntils.features.commands.CustomCommandKeybindsFeature;
 import com.wynntils.features.commands.FilterAdminCommandsFeature;
+import com.wynntils.features.custom.AutoCastFeature;
+import com.wynntils.features.custom.AutoWalkFeature;
 import com.wynntils.features.debug.AbilityTreeDataDumpFeature;
 import com.wynntils.features.debug.ConnectionProgressFeature;
 import com.wynntils.features.debug.ContentBookDumpFeature;
@@ -375,15 +377,16 @@ public final class FeatureManager extends Manager {
         registerFeature(new WeeklyConfigBackupFeature());
         // endregion
 
-        // region custom
-        registerFeature(new AutoWalkFeature());
-        // endregion
-
         // region uncategorized
         registerFeature(new DiscordRichPresenceFeature());
         registerFeature(new ExtendedSeasonLeaderboardFeature());
         registerFeature(new MythicFoundFeature());
         registerFeature(new TerritoryDefenseMessageFeature());
+        // endregion
+
+        // region custom
+        registerFeature(new AutoWalkFeature());
+        registerFeature(new AutoCastFeature());
         // endregion
 
         // Reload Minecraft's config files so our own keybinds get loaded
