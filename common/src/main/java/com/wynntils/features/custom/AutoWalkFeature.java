@@ -13,6 +13,7 @@ import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.Position;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.bus.api.SubscribeEvent;
 import org.lwjgl.glfw.GLFW;
@@ -113,13 +114,13 @@ public class AutoWalkFeature extends Feature {
     public void action() {
         if (!isWalking) {
             if (getCenter() != null) {
-                McUtils.sendChat("Enabled auto walk");
+                McUtils.sendMessageToClient(Component.literal("Enabled auto walk"));
                 pointPlayerToCoordinates(getCenter(), 100);
                 startWalking();
             } else
-                McUtils.sendChat("No mob totems found");
+                McUtils.sendMessageToClient(Component.literal("No mob totems found"));
         } else {
-            McUtils.sendChat("Disable auto walk");
+            McUtils.sendMessageToClient(Component.literal("Disable auto walk"));
             stopWalking();
         }
     }

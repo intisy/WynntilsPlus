@@ -11,6 +11,7 @@ import com.wynntils.mc.event.TickEvent;
 import com.wynntils.utils.mc.McUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.network.chat.Component;
 import net.neoforged.bus.api.SubscribeEvent;
 import org.lwjgl.glfw.GLFW;
 
@@ -38,11 +39,11 @@ public class AutoCastFeature extends Feature {
     }
     public void action() {
         if (!isActive) {
-            McUtils.sendChat("Enabled auto cast");
+            McUtils.sendMessageToClient(Component.literal("Enabled auto cast"));
             isActive = true;
             current = delayInTicks;
         } else {
-            McUtils.sendChat("Disabled auto cast");
+            McUtils.sendMessageToClient(Component.literal("Disabled auto cast"));
             isActive = false;
         }
     }
